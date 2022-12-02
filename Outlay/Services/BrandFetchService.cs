@@ -23,6 +23,8 @@ public class BrandFetchService : IBrandFetchService
         var result = (await message.Content.ReadFromJsonAsync<IEnumerable<BrandFetchData>>())!.ToList();
         if (result is null || !result.Any())
             return "";
+        
+        var asd = result!.FirstOrDefault().Icon;
         return result!.FirstOrDefault().Icon;
     }
 }
