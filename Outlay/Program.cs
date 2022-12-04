@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.Configure<MonobankSettings>(x => builder.Configuration.GetSection(MonobankConstants.Section).Bind(x));
+builder.Services.Configure<MonobankSettings>(x => builder.Configuration.GetSection(SectionConstants.Monobank).Bind(x));
 builder.Services.Configure<BrandFetchSettings>(x => builder.Configuration.GetSection(BrandFetchConstants.Token).Bind(x));
 builder.Services.AddHttpClient(MonobankConstants.Client, 
     httpClient =>
@@ -24,6 +24,11 @@ builder.Services.AddHttpClient(MonobankConstants.Client,
     });
 builder.Services.AddInMemoryDbContext();
 builder.Services.AddScoped<IBrandFetchService, BrandFetchService>();
+builder.Services.AddStackExchangeRedisCache(option =>
+{
+    option.Configuration = builder.Configuration.GetSection(SectionConstants.Redis).Value;
+    option.InstanceName = "master";
+});
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
