@@ -1,4 +1,4 @@
-namespace Outlay.Models;
+namespace Outlay.Infrastructure.Models.Responses;
 
 public class TransactionResponse
 {

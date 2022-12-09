@@ -21,7 +21,7 @@ public static class DistributedCacheExtension
     {
         var jsonData = await cache.GetStringAsync(recordId);
         return jsonData is null 
-            ? default(T)! 
-            : JsonConvert.DeserializeObject<T>(jsonData)!;
+            ? default
+            : JsonConvert.DeserializeObject<T>(jsonData);
     }
 }

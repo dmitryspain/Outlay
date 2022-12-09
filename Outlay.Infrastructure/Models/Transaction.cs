@@ -1,6 +1,6 @@
-namespace Outlay.Models;
+namespace Outlay.Infrastructure.Models;
 
-public class CardHistory
+public class Transaction
 {
     public string Id { get; set; }
     public int Time { get; set; }

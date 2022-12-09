@@ -1,9 +1,8 @@
-namespace Outlay.Models;
+namespace Outlay.Infrastructure.Models.Responses;
 
-public class TransactionByCategoryResponse
+public class TransactionByDescriptionResponse
 {
     public string Name { get; set; }
     public string Date { get; set; }
-    public DateTimeOffset Test { get; set; }
     public int Amount { get; set; }
 }

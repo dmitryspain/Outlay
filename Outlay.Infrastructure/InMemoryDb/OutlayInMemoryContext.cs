@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Outlay.Models;
+using Outlay.Infrastructure.Models;
 
-namespace Outlay.Db;
+namespace Outlay.Infrastructure.InMemoryDb;
 
 public class OutlayInMemoryContext : DbContext
 {

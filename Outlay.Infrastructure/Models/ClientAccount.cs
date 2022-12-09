@@ -1,4 +1,4 @@
-namespace Outlay.Models;
+namespace Outlay.Infrastructure.Models;
 
 public class ClientAccount
 {
@@ -10,4 +10,5 @@ public class ClientAccount
     public int CurrencyCode { get; set; }
     public string CurrencyType { get; set; }
     public string Iban { get; set; }
+    public IEnumerable<string> MaskedPan { get; set; }
 }

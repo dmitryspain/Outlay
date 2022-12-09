@@ -1,4 +1,4 @@
-namespace Outlay.Interfaces;
+namespace Outlay.Infrastructure.Interfaces;
 
 public interface IBrandFetchService
 {
