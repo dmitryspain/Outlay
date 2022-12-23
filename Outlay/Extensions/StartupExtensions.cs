@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Outlay.Infrastructure.InMemoryDb;
 using Outlay.Infrastructure.Mapper;
 using Outlay.Models;
+using StackExchange.Redis;
 
 namespace Outlay.Extensions;
 
@@ -26,10 +27,10 @@ public static class StartupExtensions
 
         return services;
     }
-    
+
     public static IServiceCollection AddAutoMapper(this IServiceCollection services)
     {
-        services.AddAutoMapper(typeof(TransactionProfile).Assembly); 
+        services.AddAutoMapper(typeof(TransactionProfile).Assembly);
         return services;
     }
 }

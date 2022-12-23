@@ -14,7 +14,6 @@ public class OutlayController : ControllerBase
 {
     private readonly ICardService _cardService;
     private readonly IDistributedCache _cache;
-    // private const string CardId = "XzNHt-dLmlqphOajbo0saA";
 
     public OutlayController(ICardService cardService, IDistributedCache cache)
     {
@@ -26,7 +25,7 @@ public class OutlayController : ControllerBase
     public async Task<ActionResult<ClientInfo>> GetClientInfo(CancellationToken cancellationToken)
     {
         var clientInfo = await _cardService.GetClientInfo(cancellationToken);
-        clientInfo.CardInfos = clientInfo.CardInfos.Where(x => x.Balance > 0); // debug
+        clientInfo.CardInfos = clientInfo.CardInfos.Where(x => x.Balance > 0); 
         return Ok(clientInfo);
     }
 
@@ -45,8 +44,8 @@ public class OutlayController : ControllerBase
     {
         const string cacheKey = "card-history";
         var cached = await _cache.GetRecordAsync<List<TransactionResponse>>(cacheKey);
-        // if (cached is not null)
-        //     return Ok(cached);
+        if (cached is not null)
+            return Ok(cached);
 
         var transactions = await _cardService.GetCardHistoryGrouped(cardRequest, cancellationToken);
         await _cache.SetRecordAsync(cacheKey, absoluteExpireTime: TimeSpan.FromHours(1), data: transactions);

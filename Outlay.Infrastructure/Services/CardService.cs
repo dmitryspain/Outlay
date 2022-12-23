@@ -10,21 +10,15 @@ namespace Outlay.Infrastructure.Services;
 
 public class CardService : ICardService
 {
-    private readonly HttpClient _httpClient;
-    // private readonly OutlayInMemoryContext _context;
-    // private readonly IBrandFetchService _brandFetchService;
     private readonly IMapper _mapper;
+    private readonly HttpClient _httpClient;
     
-    
-    public CardService(
-        IHttpClientFactory httpClientFactory, IMapper mapper)
+    public CardService(IHttpClientFactory httpClientFactory, IMapper mapper)
     {
-        // _context = context;
-        // _brandFetchService = brandFetchService;
         _mapper = mapper;
         _httpClient = httpClientFactory.CreateClient(MonobankConstants.Client);
     }
-    
+
     public async Task<IEnumerable<TransactionResponse>> GetCardHistoryGrouped(CardHistoryRequest request,
         CancellationToken cancellationToken)
     {
@@ -36,28 +30,26 @@ public class CardService : ICardService
         var infos = cardHistories!.GroupBy(x => x.Description)
             .Select(x => new BrandFetchInfo
             {
-                Name = x.Key, 
+                Name = x.Key,
                 Amount = x.Sum(s => s.Amount / 100), // simple case, ignore fractional part 
                 Mcc = x.FirstOrDefault()!.Mcc
             })
-            .OrderBy(x => x.Amount)
-            .AsEnumerable();
+            .OrderBy(x => x.Amount);
 
-        var transactions = _mapper.Map<IEnumerable<TransactionResponse>>(infos);
-        return transactions;
+        return _mapper.Map<IEnumerable<TransactionResponse>>(infos);
     }
 
-    public async Task<IEnumerable<TransactionByDescriptionResponse>> GetCardHistoryByDescription(CardHistoryByDescriptionRequest request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<TransactionByDescriptionResponse>> GetCardHistoryByDescription(
+        CardHistoryByDescriptionRequest request, CancellationToken cancellationToken)
     {
         var unixSeconds = DateTimeOffset.Now.AddDays(-10).ToUnixTimeSeconds();
         var allTransactions = await _httpClient.GetAsync($"/personal/statement/{request.CardId}/{unixSeconds}",
             cancellationToken);
-        
+
         var filtered = (await allTransactions.Content.ReadFromJsonAsync<IEnumerable<Transaction>>(cancellationToken:
             cancellationToken))!.Where(x => x.Description == request.Description);
 
-        var response = _mapper.Map<IEnumerable<TransactionByDescriptionResponse>>(filtered);
-        return response;
+        return _mapper.Map<IEnumerable<TransactionByDescriptionResponse>>(filtered);
     }
 
     public async Task<IEnumerable<Transaction>> GetCardHistory(string cardId, CancellationToken cancellationToken)
@@ -73,7 +65,6 @@ public class CardService : ICardService
     {
         var result = await _httpClient.GetAsync("/personal/client-info", cancellationToken);
         var clientInfo = await result.Content.ReadFromJsonAsync<ClientInfo>(cancellationToken: cancellationToken);
-        var response = _mapper.Map<ClientInfoResponse>(clientInfo);
-        return response!;
+        return _mapper.Map<ClientInfoResponse>(clientInfo);
     }
 }
